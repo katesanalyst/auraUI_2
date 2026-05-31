@@ -58,7 +58,7 @@ export default function RevenueChart() {
   ];
 
   return (
-    <Card sx={{ p: 3, borderRadius: 'var(--radius-lg)' }}>
+    <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h5" fontWeight={700}>Revenue Overview</Typography>

@@ -43,7 +43,7 @@ export default function RecentTransactions() {
       <Typography variant="h5" fontWeight={700} mb={3}>
         Recent Transactions
       </Typography>
-      <TableContainer>
+      <TableContainer sx={{ overflowX: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>

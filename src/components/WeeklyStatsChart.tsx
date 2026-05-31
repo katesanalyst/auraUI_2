@@ -50,7 +50,7 @@ export default function WeeklyStatsChart() {
   ];
 
   return (
-    <Card sx={{ p: 3, borderRadius: 'var(--radius-lg)' }}>
+    <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
       <Typography variant="h5" fontWeight={700} mb={0.5}>
         Weekly Stats
       </Typography>

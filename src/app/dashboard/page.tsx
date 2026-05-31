@@ -41,7 +41,7 @@ export default function DashboardPage() {
 
       <Grid container spacing={3}>
         {/* Stat Cards */}
-        <Grid xs={12} sm={6} lg={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Total Revenue"
             value="$52,680"
@@ -52,7 +52,7 @@ export default function DashboardPage() {
             bgColor="primary.light"
           />
         </Grid>
-        <Grid xs={12} sm={6} lg={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Total Orders"
             value="1,240"
@@ -63,7 +63,7 @@ export default function DashboardPage() {
             bgColor="secondary.light"
           />
         </Grid>
-        <Grid xs={12} sm={6} lg={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Total Customers"
             value="4,520"
@@ -74,7 +74,7 @@ export default function DashboardPage() {
             bgColor="success.light"
           />
         </Grid>
-        <Grid xs={12} sm={6} lg={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Growth Rate"
             value="24.8%"
@@ -87,22 +87,22 @@ export default function DashboardPage() {
         </Grid>
 
         {/* Revenue Chart */}
-        <Grid xs={12} lg={8}>
+        <Grid item xs={12} lg={8}>
           <RevenueChart />
         </Grid>
 
         {/* Weekly Stats */}
-        <Grid xs={12} lg={4}>
+        <Grid item xs={12} lg={4}>
           <WeeklyStatsChart />
         </Grid>
 
         {/* Recent Transactions */}
-        <Grid xs={12} lg={7}>
+        <Grid item xs={12} lg={7}>
           <RecentTransactions />
         </Grid>
 
         {/* Top Products */}
-        <Grid xs={12} lg={5}>
+        <Grid item xs={12} lg={5}>
           <Card sx={{ p: 3, borderRadius: 'var(--radius-lg)' }}>
             <Typography variant="h5" fontWeight={700} mb={3}>
               Top Products
