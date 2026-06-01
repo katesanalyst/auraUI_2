@@ -3,6 +3,7 @@
 import { Box } from '@mui/material';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
+import Customizer from '@/components/customizer/Customizer';
 import { useSidebar } from './SidebarProvider';
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -35,6 +36,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         />
         {children}
       </Box>
+      <Customizer />
     </Box>
   );
 }

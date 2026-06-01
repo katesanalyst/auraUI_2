@@ -80,6 +80,9 @@ export const sidebarNav: NavItem[] = [
       { title: 'Area',         icon: 'Circle', href: '/dashboard/charts/area' },
       { title: 'Candlestick',  icon: 'Circle', href: '/dashboard/charts/candlestick' },
       { title: 'Box Plot',     icon: 'Circle', href: '/dashboard/charts/boxplot' },
+      { title: 'Scatter',      icon: 'Circle', href: '/dashboard/charts/scatter' },
+      { title: 'Gauge',        icon: 'Circle', href: '/dashboard/charts/gauge' },
+      { title: 'Sparkline',    icon: 'Circle', href: '/dashboard/charts/sparkline' },
     ],
   },
   {
