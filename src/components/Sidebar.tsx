@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import {
   Box,
   List,
@@ -34,9 +35,9 @@ import {
   Circle,
   ExpandMore,
   ChevronRight,
-  Menu as MenuIcon,
   Close,
   PersonOutline,
+  ConfirmationNumber,
 } from '@mui/icons-material';
 import { sidebarNav, NavItem } from '@/lib/navigation';
 
@@ -50,6 +51,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Widgets: <Widgets fontSize="small" />,
   Lock: <Lock fontSize="small" />,
   Build: <Build fontSize="small" />,
+  ConfirmationNumber: <ConfirmationNumber fontSize="small" />,
   Circle: <Circle sx={{ fontSize: 8 }} />,
 };
 
@@ -64,7 +66,11 @@ function NavItemComponent({ item, mini, depth = 0 }: { item: NavItem; mini: bool
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
-  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+
+  const isActive =
+    item.href === '/dashboard'
+      ? pathname === item.href
+      : pathname === item.href || pathname.startsWith(item.href + '/');
 
   const handleClick = () => {
     if (hasChildren) setOpen(!open);
@@ -137,79 +143,89 @@ function NavItemComponent({ item, mini, depth = 0 }: { item: NavItem; mini: bool
   );
 }
 
-const sidebarContent = (mini: boolean) => (
-  <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'var(--bg-sidebar)' }}>
-    {/* Logo */}
-    <Box sx={{ p: mini ? 2 : 3, display: 'flex', alignItems: 'center', gap: 1.5, minHeight: 64 }}>
-      <Avatar
-        sx={{
-          width: 40,
-          height: 40,
-          bgcolor: 'primary.main',
-          borderRadius: '12px',
-          fontWeight: 700,
-          fontSize: '1.1rem',
-        }}
-      >
-        S
-      </Avatar>
-      {!mini && (
-        <Typography variant="h6" sx={{ color: '#fff', fontWeight: 700, fontSize: '1.1rem' }}>
-          Spike
-        </Typography>
-      )}
-    </Box>
-    <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
+function SidebarContent({ mini }: { mini: boolean }) {
+  const { data: session } = useSession();
+  const userName = session?.user?.name ?? 'John Doe';
+  const userRole = (session?.user as { role?: string })?.role ?? 'Admin';
 
-    {/* User */}
-    <Box sx={{ p: mini ? 1.5 : 2, display: 'flex', alignItems: 'center', gap: 1.5 }}>
-      <Badge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        variant="dot"
-        color="success"
-      >
-        <Avatar sx={{ width: 40, height: 40, borderRadius: '12px' }}>
-          <PersonOutline />
+  return (
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'var(--bg-sidebar)' }}>
+      {/* Logo */}
+      <Box sx={{ p: mini ? 2 : 3, display: 'flex', alignItems: 'center', gap: 1.5, minHeight: 64 }}>
+        <Avatar
+          sx={{
+            width: 40,
+            height: 40,
+            bgcolor: 'primary.main',
+            borderRadius: '12px',
+            fontWeight: 700,
+            fontSize: '1.1rem',
+          }}
+        >
+          S
         </Avatar>
-      </Badge>
-      {!mini && (
-        <Box>
-          <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600 }}>
-            John Doe
+        {!mini && (
+          <Typography variant="h6" sx={{ color: '#fff', fontWeight: 700, fontSize: '1.1rem' }}>
+            Spike
           </Typography>
+        )}
+      </Box>
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
+
+      {/* User */}
+      <Box sx={{ p: mini ? 1.5 : 2, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          variant="dot"
+          color="success"
+        >
+          <Avatar sx={{ width: 40, height: 40, borderRadius: '12px' }}>
+            <PersonOutline />
+          </Avatar>
+        </Badge>
+        {!mini && (
+          <Box>
+            <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600 }}>
+              {userName}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'var(--text-sidebar)' }}>
+              {userRole}
+            </Typography>
+          </Box>
+        )}
+      </Box>
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
+
+      {/* Navigation */}
+      <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', py: 1, '&::-webkit-scrollbar': { width: 0 } }}>
+        <List component="nav" disablePadding>
+          {sidebarNav.map((item) => (
+            <NavItemComponent key={item.href} item={item} mini={mini} />
+          ))}
+        </List>
+      </Box>
+
+      {/* Footer */}
+      {!mini && (
+        <Box sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <Typography variant="caption" sx={{ color: 'var(--text-sidebar)' }}>
-            Admin
+            Spike Admin Template
           </Typography>
         </Box>
       )}
     </Box>
-    <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
-
-    {/* Navigation */}
-    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', py: 1, '&::-webkit-scrollbar': { width: 0 } }}>
-      <List component="nav" disablePadding>
-        {sidebarNav.map((item) => (
-          <NavItemComponent key={item.href} item={item} mini={mini} />
-        ))}
-      </List>
-    </Box>
-
-    {/* Footer */}
-    {!mini && (
-      <Box sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-        <Typography variant="caption" sx={{ color: 'var(--text-sidebar)' }}>
-          Spike Admin Template
-        </Typography>
-      </Box>
-    )}
-  </Box>
-);
+  );
+}
 
 export default function Sidebar({ mini, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const [hovered, setHovered] = useState(false);
+
+  // When in mini mode, hovering temporarily expands the sidebar as an overlay.
+  // Main content margin does not change — expanded sidebar floats over content.
+  const isExpanded = !mini || hovered;
 
   return (
     <>
@@ -233,28 +249,32 @@ export default function Sidebar({ mini, onToggle, mobileOpen, onMobileClose }: S
             <Close />
           </IconButton>
         </Box>
-        {sidebarContent(false)}
+        <SidebarContent mini={false} />
       </Drawer>
 
       {/* Desktop sidebar */}
       <Box
         component="aside"
+        onMouseEnter={() => mini && setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         sx={{
           display: { xs: 'none', lg: 'block' },
-          width: mini ? 'var(--sidebar-mini-width)' : 'var(--sidebar-width)',
+          width: isExpanded ? 'var(--sidebar-width)' : 'var(--sidebar-mini-width)',
           flexShrink: 0,
-          transition: 'width 0.3s ease',
+          transition: 'width 0.25s ease, box-shadow 0.25s ease',
           position: 'fixed',
           top: 0,
           left: 0,
           height: '100vh',
-          zIndex: 1100,
+          zIndex: 1200,
           bgcolor: 'var(--bg-sidebar)',
           borderRight: '1px solid rgba(255,255,255,0.08)',
           overflow: 'hidden',
+          // Elevate when hover-expanded in mini mode so it floats over content
+          boxShadow: mini && hovered ? '4px 0 24px rgba(0,0,0,0.35)' : 'none',
         }}
       >
-        {sidebarContent(mini)}
+        <SidebarContent mini={!isExpanded} />
       </Box>
     </>
   );

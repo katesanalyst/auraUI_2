@@ -1,24 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Spike Design System Colors */
   --primary: #0085db;
   --primary-light: #e5f3fb;
   --primary-dark: #006bb3;
   --secondary: #46caeb;
   --secondary-light: #e1f5fa;
   --warning: #fb977d;
-  --error: #fb977d;
+  --error: #f44336;
   --success: #39b69a;
   --info: #46caeb;
 
-  /* Backgrounds */
   --bg-body: #F0F5F9;
   --bg-card: #ffffff;
   --bg-sidebar: #111c2d;
   --bg-sidebar-hover: rgba(255,255,255,0.08);
 
-  /* Text */
   --text-primary: #111c2d;
   --text-secondary: #5a6264;
   --text-muted: #8a929a;
@@ -26,33 +23,46 @@
   --text-sidebar: #8a929a;
   --text-sidebar-active: #ffffff;
 
-  /* Borders */
   --border: #e5eaef;
   --border-input: #DFE5EF;
 
-  /* Shadows */
   --shadow-card: 0 2px 30px 15px rgba(37,83,185,.1);
   --shadow-button: 0 0 1px 0 rgba(0,0,0,0.31), 0 2px 2px -2px rgba(0,0,0,0.25);
 
-  /* Radius */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-xl: 25px;
   --radius-full: 50%;
 
-  /* Sidebar */
   --sidebar-width: 270px;
   --sidebar-mini-width: 80px;
   --header-height: 64px;
 
-  /* Font */
   --font-family: 'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', Helvetica, Arial, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
+[data-theme="dark"] {
+  --bg-body: #0f1214;
+  --bg-card: #1a2234;
+  --bg-sidebar: #0a0f1a;
+  --bg-sidebar-hover: rgba(255,255,255,0.06);
+
+  --text-primary: #e8eaf0;
+  --text-secondary: #8a929a;
+  --text-muted: #4a5568;
+  --text-sidebar: #6a7585;
+  --text-sidebar-active: #ffffff;
+
+  --border: #2a3a4a;
+  --border-input: #2a3a4a;
+
+  --shadow-card: 0 2px 20px 8px rgba(0,0,0,0.3);
+  --primary-light: #1a3a5c;
+  --secondary-light: #1a3a45;
 }
+
+* { box-sizing: border-box; }
 
 html {
   -webkit-font-smoothing: antialiased;
@@ -78,29 +88,14 @@ a {
   text-decoration: none;
   color: inherit;
 }
+a:hover { color: var(--primary); }
 
-a:hover {
-  color: var(--primary);
-}
+#root, #__next { height: 100%; }
 
-#root, #__next {
-  height: 100%;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Utility Classes */
 .text-truncate-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -117,7 +112,6 @@ hr {
   border-top: 1px solid var(--border);
 }
 
-/* Animations */
 @keyframes gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -135,38 +129,4 @@ hr {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-/* Responsive container */
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  margin-left: var(--sidebar-width);
-  padding: 24px;
-  transition: margin-left 0.3s ease;
-  min-height: 100vh;
-}
-
-.main-content.mini {
-  margin-left: var(--sidebar-mini-width);
-}
-
-/* Mobile */
-@media (max-width: 599px) {
-  .main-content,
-  .main-content.mini {
-    margin-left: 0;
-    padding: 16px;
-  }
-}
-
-/* Tablet */
-@media (min-width: 600px) and (max-width: 1199px) {
-  .main-content {
-    margin-left: var(--sidebar-mini-width);
-  }
 }

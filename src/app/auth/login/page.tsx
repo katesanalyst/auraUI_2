@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import {
   Box,
   Card,
@@ -14,27 +16,44 @@ import {
   InputAdornment,
   Link as MuiLink,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link';
 
-export default function LoginPage() {
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard';
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
-    // Demo login
-    if (email === 'demo1234@gmail.com' && password === 'demo1234') {
-      window.location.href = '/dashboard';
-    } else {
-      setError('Invalid credentials. Use demo1234@gmail.com / demo1234');
+    setError('');
+    setLoading(true);
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+      if (result?.ok) {
+        router.push(callbackUrl);
+        router.refresh();
+      } else {
+        setError('Invalid credentials. Use demo1234@gmail.com / demo1234');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,7 +64,7 @@ export default function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: 'var(--bg-body)',
+        bgcolor: 'background.default',
         p: 2,
         position: 'relative',
         overflow: 'hidden',
@@ -60,7 +79,7 @@ export default function LoginPage() {
           width: 300,
           height: 300,
           borderRadius: '50%',
-          bgcolor: '#fb977d',
+          bgcolor: 'warning.main',
           opacity: 0.3,
         }}
       />
@@ -117,7 +136,6 @@ export default function LoginPage() {
                 Sign in to continue to Spike Admin Dashboard
               </Typography>
             </Box>
-            {/* Decorative circles */}
             <Box
               sx={{
                 position: 'absolute',
@@ -153,36 +171,26 @@ export default function LoginPage() {
             }}
           >
             {/* Logo */}
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 1 }}>
               <Box
                 sx={{
-                  width: 180,
-                  height: 70,
+                  width: 40,
+                  height: 40,
+                  borderRadius: '12px',
+                  bgcolor: 'primary.main',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 1,
+                  justifyContent: 'center',
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: '1.2rem',
                 }}
               >
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '12px',
-                    bgcolor: 'primary.main',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '1.2rem',
-                  }}
-                >
-                  S
-                </Box>
-                <Typography variant="h5" fontWeight={700}>
-                  Spike
-                </Typography>
+                S
               </Box>
+              <Typography variant="h5" fontWeight={700}>
+                Spike
+              </Typography>
             </Box>
 
             <Typography variant="h4" fontWeight={700} mb={1}>
@@ -205,13 +213,12 @@ export default function LoginPage() {
                 fullWidth
                 sx={{
                   borderRadius: 'var(--radius-xl)',
-                  borderColor: 'var(--border)',
+                  borderColor: 'divider',
                   color: 'text.primary',
                   py: 1.5,
                   '&:hover': { borderColor: 'primary.main', color: 'primary.main' },
                 }}
               >
-                <Box component="img" src="/images/svgs/google-icon.svg" alt="Google" sx={{ width: 20, mr: 1, display: 'none' }} />
                 Google
               </Button>
               <Button
@@ -219,7 +226,7 @@ export default function LoginPage() {
                 fullWidth
                 sx={{
                   borderRadius: 'var(--radius-xl)',
-                  borderColor: 'var(--border)',
+                  borderColor: 'divider',
                   color: 'text.primary',
                   py: 1.5,
                   '&:hover': { borderColor: 'primary.main', color: 'primary.main' },
@@ -247,6 +254,7 @@ export default function LoginPage() {
                 type="email"
                 sx={{ mb: 2.5 }}
                 size="small"
+                disabled={loading}
               />
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
@@ -265,6 +273,7 @@ export default function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 sx={{ mb: 2 }}
                 size="small"
+                disabled={loading}
                 slotProps={{
                   input: {
                     endAdornment: (
@@ -289,9 +298,10 @@ export default function LoginPage() {
                 variant="contained"
                 fullWidth
                 size="large"
+                disabled={loading}
                 sx={{ mb: 3, py: 1.5, fontWeight: 600 }}
               >
-                Sign In
+                {loading ? <CircularProgress size={22} color="inherit" /> : 'Sign In'}
               </Button>
             </form>
 
@@ -302,7 +312,6 @@ export default function LoginPage() {
               </MuiLink>
             </Typography>
 
-            {/* Demo credentials hint */}
             <Alert severity="info" sx={{ mt: 3, borderRadius: 'var(--radius-lg)' }}>
               <Typography variant="caption">
                 Demo: <strong>demo1234@gmail.com</strong> / <strong>demo1234</strong>
@@ -312,5 +321,13 @@ export default function LoginPage() {
         </Box>
       </Card>
     </Box>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

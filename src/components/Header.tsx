@@ -29,6 +29,14 @@ import {
   ChatBubbleOutline,
 } from '@mui/icons-material';
 import { useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
+import { useColorMode } from '@/components/ThemeProvider';
+
+const NOTIFICATIONS = [
+  { text: 'New order received', type: 'primary' },
+  { text: 'Server limit reached', type: 'warning' },
+  { text: 'New registration', type: 'primary' },
+];
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -38,9 +46,14 @@ interface HeaderProps {
 
 export default function Header({ onMenuClick, mini, onToggleMini }: HeaderProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notifAnchor, setNotifAnchor] = useState<null | HTMLElement>(null);
+  const { data: session } = useSession();
+  const { mode, toggleMode } = useColorMode();
+
+  const userName = session?.user?.name ?? 'John Doe';
+  const userRole = (session?.user as { role?: string })?.role ?? 'Admin';
 
   return (
     <Box
@@ -66,7 +79,7 @@ export default function Header({ onMenuClick, mini, onToggleMini }: HeaderProps)
           sx={{
             display: { xs: 'none', sm: 'flex' },
             alignItems: 'center',
-            bgcolor: 'var(--bg-body)',
+            bgcolor: 'background.default',
             borderRadius: 'var(--radius-xl)',
             px: 2,
             py: 0.5,
@@ -93,9 +106,14 @@ export default function Header({ onMenuClick, mini, onToggleMini }: HeaderProps)
             <Notifications fontSize="small" />
           </Badge>
         </IconButton>
-        <IconButton size="small">
-          <Fullscreen fontSize="small" sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <IconButton size="small" onClick={toggleMode} title={mode === 'dark' ? 'Light mode' : 'Dark mode'}>
+          {mode === 'dark' ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
         </IconButton>
+        {!isMobile && (
+          <IconButton size="small">
+            <Fullscreen fontSize="small" />
+          </IconButton>
+        )}
         <Divider orientation="vertical" flexItem sx={{ mx: 1, display: { xs: 'none', sm: 'block' } }} />
 
         {/* User Menu */}
@@ -117,10 +135,10 @@ export default function Header({ onMenuClick, mini, onToggleMini }: HeaderProps)
           </Avatar>
           <Box sx={{ display: { xs: 'none', md: 'block' } }}>
             <Typography variant="body2" fontWeight={600} fontSize="0.8rem">
-              John Doe
+              {userName}
             </Typography>
             <Typography variant="caption" color="text.disabled" fontSize="0.7rem">
-              Admin
+              {userRole}
             </Typography>
           </Box>
         </Box>
@@ -137,14 +155,14 @@ export default function Header({ onMenuClick, mini, onToggleMini }: HeaderProps)
           <Typography variant="h6">Notifications</Typography>
         </Box>
         <Divider />
-        {['New order received', 'Server limit reached', 'New registration'].map((text, i) => (
+        {NOTIFICATIONS.map((notif, i) => (
           <MenuItem key={i} onClick={() => setNotifAnchor(null)}>
             <ListItemIcon>
-              <Badge color={i === 1 ? 'warning' : 'primary'} variant="dot">
+              <Badge color={notif.type as 'primary' | 'warning'} variant="dot">
                 <Notifications fontSize="small" />
               </Badge>
             </ListItemIcon>
-            <ListItemText primary={text} secondary="Just now" />
+            <ListItemText primary={notif.text} secondary="Just now" />
           </MenuItem>
         ))}
         <Divider />
@@ -171,7 +189,7 @@ export default function Header({ onMenuClick, mini, onToggleMini }: HeaderProps)
           <ListItemText>Settings</ListItemText>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => setAnchorEl(null)}>
+        <MenuItem onClick={() => { setAnchorEl(null); signOut({ callbackUrl: '/auth/login' }); }}>
           <ListItemIcon><Logout fontSize="small" /></ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>

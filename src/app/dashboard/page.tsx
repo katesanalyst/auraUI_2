@@ -1,161 +1,182 @@
 'use client';
 
-import { Grid, Box, Typography, Chip, Card, Avatar, LinearProgress } from '@mui/material';
+import dynamic from 'next/dynamic';
+import { Box, Typography, Card, Grid, Avatar } from '@mui/material';
 import {
+  ConfirmationNumber,
+  HourglassTop,
+  CheckCircle,
+  Reply,
   TrendingUp,
-  AttachMoney,
-  ShoppingCart,
-  People,
-  LocalOffer,
 } from '@mui/icons-material';
 import StatCard from '@/components/StatCard';
-import RevenueChart from '@/components/RevenueChart';
-import RecentTransactions from '@/components/RecentTransactions';
-import WeeklyStatsChart from '@/components/WeeklyStatsChart';
+import { useColorMode } from '@/components/ThemeProvider';
+import {
+  weeklyCreated,
+  weeklyResolved,
+  getCreatedVsResolvedOptions,
+  getConversionsOptions,
+  getChannelsOptions,
+  getSatisfactionOptions,
+} from '@/config/charts';
 
-const products = [
-  { name: 'iPhone 15 Pro', category: 'Electronics', price: '$999', stock: 45, progress: 85 },
-  { name: 'MacBook Air M3', category: 'Laptops', price: '$1,299', stock: 32, progress: 72 },
-  { name: 'AirPods Pro 2', category: 'Audio', price: '$249', stock: 120, progress: 95 },
-  { name: 'iPad Pro', category: 'Tablets', price: '$799', stock: 58, progress: 60 },
-];
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
+const conversionsData = [1200, 1900, 1500, 2100, 1800, 2400, 2100, 2600, 2300, 1900, 2500, 2800];
 
 export default function DashboardPage() {
+  const { mode } = useColorMode();
+  const isDark = mode === 'dark';
+
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" fontWeight={700}>
-            Dashboard
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Welcome back, John! Here&apos;s what&apos;s happening.
-          </Typography>
-        </Box>
-        <Chip
-          label="Jan 20 - Feb 20, 2024"
-          variant="outlined"
-          sx={{ borderRadius: 'var(--radius-xl)', fontWeight: 500, display: { xs: 'none', sm: 'flex' } }}
-        />
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" fontWeight={700}>Dashboard</Typography>
+        <Typography variant="body2" color="text.secondary">Overview of ticket metrics and performance</Typography>
       </Box>
 
       <Grid container spacing={3}>
         {/* Stat Cards */}
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Total Revenue"
-            value="$52,680"
-            change="12.5%"
-            changeType="up"
-            icon={<AttachMoney sx={{ color: 'primary.main' }} />}
+            title="Created Tickets"
+            value="24,208"
+            change="5%"
+            changeType="down"
+            icon={<ConfirmationNumber sx={{ color: 'primary.main' }} />}
             color="primary.main"
             bgColor="primary.light"
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Total Orders"
-            value="1,240"
-            change="8.2%"
+            title="Unsolved Tickets"
+            value="4,564"
+            change="2%"
             changeType="up"
-            icon={<ShoppingCart sx={{ color: 'secondary.main' }} />}
-            color="secondary.main"
-            bgColor="secondary.light"
+            icon={<HourglassTop sx={{ color: 'warning.main' }} />}
+            color="warning.main"
+            bgColor="warning.light"
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Total Customers"
-            value="4,520"
-            change="3.1%"
+            title="Resolved Tickets"
+            value="18,208"
+            change="8%"
             changeType="up"
-            icon={<People sx={{ color: 'success.main' }} />}
+            icon={<CheckCircle sx={{ color: 'success.main' }} />}
             color="success.main"
             bgColor="success.light"
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Growth Rate"
-            value="24.8%"
-            change="2.4%"
-            changeType="down"
-            icon={<TrendingUp sx={{ color: 'warning.main' }} />}
-            color="warning.main"
-            bgColor="#fde8e2"
+            title="Avg First Reply"
+            value="12:01"
+            change="8%"
+            changeType="up"
+            icon={<Reply sx={{ color: 'info.main' }} />}
+            color="info.main"
+            bgColor="info.light"
           />
         </Grid>
 
-        {/* Revenue Chart */}
+        {/* Avg Tickets (2/3) + Conversions (1/3) */}
         <Grid item xs={12} lg={8}>
-          <RevenueChart />
-        </Grid>
-
-        {/* Weekly Stats */}
-        <Grid item xs={12} lg={4}>
-          <WeeklyStatsChart />
-        </Grid>
-
-        {/* Recent Transactions */}
-        <Grid item xs={12} lg={7}>
-          <RecentTransactions />
-        </Grid>
-
-        {/* Top Products */}
-        <Grid item xs={12} lg={5}>
-          <Card sx={{ p: 3, borderRadius: 'var(--radius-lg)' }}>
-            <Typography variant="h5" fontWeight={700} mb={3}>
-              Top Products
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-              {products.map((product) => (
-                <Box key={product.name}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                      <Avatar
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          bgcolor: 'primary.light',
-                          borderRadius: '10px',
-                        }}
-                      >
-                        <LocalOffer sx={{ fontSize: 20, color: 'primary.main' }} />
-                      </Avatar>
-                      <Box>
-                        <Typography variant="body2" fontWeight={600}>
-                          {product.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {product.category}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box sx={{ textAlign: 'right' }}>
-                      <Typography variant="body2" fontWeight={600}>
-                        {product.price}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {product.stock} sold
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={product.progress}
-                    sx={{
-                      height: 6,
-                      borderRadius: 3,
-                      bgcolor: 'var(--bg-body)',
-                      '& .MuiLinearProgress-bar': {
-                        borderRadius: 3,
-                        bgcolor: product.progress > 90 ? 'success.main' : 'primary.main',
-                      },
-                    }}
-                  />
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Box>
+                <Typography variant="h5" fontWeight={700}>Avg. Tickets Created</Typography>
+                <Typography variant="body2" color="text.secondary">Dec 18, 2023 - Dec 24, 2023</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <Box sx={{ textAlign: 'right' }}>
+                  <Typography variant="body2" color="text.secondary" fontSize="0.75rem">Avg. Created</Typography>
+                  <Typography variant="h6" fontWeight={700}>3,817</Typography>
                 </Box>
-              ))}
+                <Box sx={{ textAlign: 'right' }}>
+                  <Typography variant="body2" color="text.secondary" fontSize="0.75rem">Avg. Resolved</Typography>
+                  <Typography variant="h6" fontWeight={700} color="secondary.main">2,176</Typography>
+                </Box>
+              </Box>
             </Box>
+            <Chart
+              options={getCreatedVsResolvedOptions(isDark)}
+              series={[
+                { name: 'Created', data: weeklyCreated },
+                { name: 'Resolved', data: weeklyResolved },
+              ]}
+              type="area"
+              height={320}
+            />
+          </Card>
+        </Grid>
+        <Grid item xs={12} lg={4}>
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.light', borderRadius: '10px' }}>
+                <TrendingUp sx={{ fontSize: 20, color: 'primary.main' }} />
+              </Avatar>
+              <Typography variant="h5" fontWeight={700}>Conversions</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5, mb: 1 }}>
+              <Typography variant="h3" fontWeight={700}>17,220</Typography>
+              <Typography variant="body2" color="text.secondary">Sales</Typography>
+            </Box>
+            <Box sx={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
+              <Chart
+                options={getConversionsOptions(isDark)}
+                series={[{ name: 'Sales', data: conversionsData }]}
+                type="area"
+                height={200}
+              />
+            </Box>
+          </Card>
+        </Grid>
+
+        {/* Ticket By Channels (1/2) + Customer Satisfaction (1/2) */}
+        <Grid item xs={12} lg={6}>
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.light', borderRadius: '10px' }}>
+                <ConfirmationNumber sx={{ fontSize: 20, color: 'primary.main' }} />
+              </Avatar>
+              <Typography variant="h5" fontWeight={700}>Ticket By Channels</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Chart options={getChannelsOptions(isDark)} series={[8200, 6400, 5100, 4508]} type="donut" height={280} />
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.light', borderRadius: '10px' }}>
+                <CheckCircle sx={{ fontSize: 20, color: 'primary.main' }} />
+              </Avatar>
+              <Typography variant="h5" fontWeight={700}>Customer Satisfaction</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+              <Chart options={getSatisfactionOptions(isDark)} series={[80, 15, 5]} type="donut" height={220} />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h5" fontWeight={700} color="success.main">80%</Typography>
+                <Typography variant="body2" color="text.secondary">Positive</Typography>
+              </Box>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h5" fontWeight={700} color="warning.main">15%</Typography>
+                <Typography variant="body2" color="text.secondary">Neutral</Typography>
+              </Box>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h5" fontWeight={700} color="error.main">5%</Typography>
+                <Typography variant="body2" color="text.secondary">Negative</Typography>
+              </Box>
+            </Box>
+            <Typography variant="body2" color="text.secondary" textAlign="center" mt={2}>
+              Survey results from 156 customers
+            </Typography>
           </Card>
         </Grid>
       </Grid>
