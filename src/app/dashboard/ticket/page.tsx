@@ -333,8 +333,8 @@ export default function TicketDashboardPage() {
                       sx={{
                         height: 6,
                         borderRadius: 3,
-                        bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)',
-                        '& .MuiLinearProgress-bar': { bgcolor: color, borderRadius: 3 },
+                        '&.MuiLinearProgress-root': { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
+                        '& .MuiLinearProgress-bar': { backgroundColor: color, borderRadius: 3 },
                       }}
                     />
                   </Box>

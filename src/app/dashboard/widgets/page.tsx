@@ -264,8 +264,9 @@ export default function WidgetsPage() {
                   <Typography variant="body2" fontWeight={700} sx={{ color }}>{revenue}</Typography>
                 </Box>
                 <LinearProgress variant="determinate" value={progress}
-                  sx={{ height: 5, borderRadius: 3, bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)',
-                    '& .MuiLinearProgress-bar': { bgcolor: color, borderRadius: 3 } }} />
+                  sx={{ height: 5, borderRadius: 3,
+                    '&.MuiLinearProgress-root': { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
+                    '& .MuiLinearProgress-bar': { backgroundColor: color, borderRadius: 3 } }} />
               </Box>
             ))}
           </Card>
@@ -288,8 +289,8 @@ export default function WidgetsPage() {
                     <Star sx={{ fontSize: 10, color: 'warning.main' }} />
                     <LinearProgress variant="determinate" value={STAR_PCTS[i]}
                       sx={{ flex: 1, height: 5, borderRadius: 3,
-                        bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)',
-                        '& .MuiLinearProgress-bar': { bgcolor: 'warning.main', borderRadius: 3 } }} />
+                        '&.MuiLinearProgress-root': { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
+                        '& .MuiLinearProgress-bar': { backgroundColor: '#f0c040', borderRadius: 3 } }} />
                     <Typography variant="caption" color="text.secondary" sx={{ minWidth: 22, fontSize: '0.6rem' }}>{STAR_PCTS[i]}%</Typography>
                   </Box>
                 ))}
@@ -383,8 +384,8 @@ export default function WidgetsPage() {
                 </Box>
                 <LinearProgress variant="determinate" value={progress}
                   sx={{ height: 7, borderRadius: 4,
-                    bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)',
-                    '& .MuiLinearProgress-bar': { bgcolor: color, borderRadius: 4 } }} />
+                    '&.MuiLinearProgress-root': { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
+                    '& .MuiLinearProgress-bar': { backgroundColor: color, borderRadius: 4 } }} />
               </Box>
             ))}
           </Card>

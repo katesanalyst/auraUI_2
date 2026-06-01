@@ -1,63 +1,84 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Box, Typography, Card } from '@mui/material';
+import { Box, Typography, Card, Grid } from '@mui/material';
+import { useColorMode } from '@/components/ThemeProvider';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
+const COLORS = ['#0085db', '#46caeb', '#39b69a', '#fb977d', '#7C3AED', '#f0c040'];
+const LABELS = ['Direct', 'Organic', 'Social', 'Referral', 'Email', 'Paid'];
+const DATA   = [44, 28, 18, 12, 8, 5];
+
 export default function PieChartPage() {
-  const options: ApexCharts.ApexOptions = {
-    chart: {
-      type: 'donut',
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
-    },
-    colors: ['#0085db', '#46caeb', '#39b69a', '#fb977d', '#7c5cfc'],
-    labels: ['Electronics', 'Clothing', 'Food', 'Sports', 'Other'],
+  const { mode } = useColorMode();
+  const isDark = mode === 'dark';
+  const strokeColor = isDark ? '#1a2234' : '#fff';
+  const tc = '#8a929a';
+
+  const base: ApexCharts.ApexOptions = {
+    chart: { fontFamily: "'Plus Jakarta Sans', sans-serif", background: 'transparent' },
+    colors: COLORS,
+    labels: LABELS,
+    stroke: { width: 2, colors: [strokeColor] },
+    legend: { position: 'bottom', labels: { colors: tc }, fontSize: '13px' },
+    dataLabels: { enabled: true, style: { fontSize: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif" } },
+    tooltip: { theme: isDark ? 'dark' : 'light' },
+    theme: { mode: isDark ? 'dark' : 'light' },
+  };
+
+  const pieOpts: ApexCharts.ApexOptions = { ...base, chart: { ...base.chart, type: 'pie' } };
+
+  const donutOpts: ApexCharts.ApexOptions = {
+    ...base,
+    chart: { ...base.chart, type: 'donut' },
     plotOptions: {
       pie: {
         donut: {
-          size: '70%',
+          size: '68%',
           labels: {
             show: true,
-            name: { show: true, fontSize: '14px', fontWeight: 600 },
-            value: {
-              show: true,
-              fontSize: '16px',
-              fontWeight: 700,
-              formatter: (val) => `$${val}k`,
-            },
-            total: {
-              show: true,
-              label: 'Total',
-              fontSize: '14px',
-              fontWeight: 600,
-              formatter: (w) => {
-                const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
-                return `$${total}k`;
-              },
-            },
+            name: { show: true, fontSize: '14px', fontWeight: 600, color: tc },
+            value: { show: true, fontSize: '22px', fontWeight: 700, color: isDark ? '#e8eaf0' : '#111c2d' },
+            total: { show: true, label: 'Total', fontSize: '13px', color: tc, formatter: () => DATA.reduce((a, b) => a + b, 0).toString() },
           },
         },
       },
     },
-    stroke: { width: 2, colors: ['#fff'] },
-    legend: { position: 'bottom', fontSize: '13px' },
-    tooltip: { theme: 'light', y: { formatter: (val) => `$${val}k` } },
-    dataLabels: { enabled: false },
-    responsive: [
-      { breakpoint: 480, options: { chart: { width: 300 }, legend: { position: 'bottom' } } },
-    ],
   };
 
-  const series = [44, 55, 41, 17, 25];
+  const monoOpts: ApexCharts.ApexOptions = {
+    ...base,
+    chart: { ...base.chart, type: 'donut' },
+    colors: undefined,
+    theme: { mode: isDark ? 'dark' : 'light', monochrome: { enabled: true, color: '#0085db', shadeTo: 'light', shadeIntensity: 0.65 } },
+    plotOptions: { pie: { donut: { size: '65%' } } },
+  };
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight={700} mb={0.5}>Pie / Donut Chart</Typography>
-      <Typography variant="body2" color="text.secondary" mb={3}>Sales distribution by category</Typography>
-      <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
-        <Chart options={options} series={series} type="donut" height={400} />
-      </Card>
+      <Typography variant="h4" fontWeight={700} mb={0.5}>Pie & Donut Chart</Typography>
+      <Typography variant="body2" color="text.secondary" mb={3}>Pie, donut, and monochrome variants</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+            <Typography variant="h6" fontWeight={700} mb={1}>Pie Chart</Typography>
+            <Chart options={pieOpts} series={DATA} type="pie" height={320} />
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+            <Typography variant="h6" fontWeight={700} mb={1}>Donut Chart</Typography>
+            <Chart options={donutOpts} series={DATA} type="donut" height={320} />
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card sx={{ p: { xs: 2, sm: 3 }, borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+            <Typography variant="h6" fontWeight={700} mb={1}>Monochrome Donut</Typography>
+            <Chart options={monoOpts} series={DATA} type="donut" height={320} />
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

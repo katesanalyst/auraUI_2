@@ -47,9 +47,9 @@ export default function EcommercePage() {
 
   const revenueOptions: ApexCharts.ApexOptions = {
     chart: { type: 'bar', toolbar: { show: false }, fontFamily: "'Plus Jakarta Sans', sans-serif" },
-    colors: ['#0085db', '#e5eaef'],
+    colors: ['#0085db', '#46caeb'],
     plotOptions: { bar: { borderRadius: 6, columnWidth: '55%' } },
-    grid: { borderColor: '#e5eaef', strokeDashArray: 4 },
+    grid: { borderColor: '#e5eaef', strokeDashArray: 4, xaxis: { lines: { show: false } } },
     xaxis: {
       categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       labels: { style: { colors: '#8a929a', fontSize: '12px' } },

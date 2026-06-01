@@ -31,7 +31,7 @@ export default function BasicTablePage() {
         <TableContainer sx={{ overflowX: 'auto' }}>
           <Table>
             <TableHead>
-              <TableRow sx={{ bgcolor: 'var(--bg-body)' }}>
+              <TableRow sx={{ bgcolor: 'action.hover' }}>
                 <TableCell sx={{ fontWeight: 600 }}>User</TableCell>
                 <TableCell sx={{ fontWeight: 600, display: { xs: 'none', sm: 'table-cell' } }}>Email</TableCell>
                 <TableCell sx={{ fontWeight: 600, display: { xs: 'none', md: 'table-cell' } }}>Role</TableCell>
@@ -41,7 +41,7 @@ export default function BasicTablePage() {
             </TableHead>
             <TableBody>
               {rows.slice(page * rpp, page * rpp + rpp).map((row, i) => (
-                <TableRow key={row.id} sx={{ '&:nth-of-type(odd)': { bgcolor: 'rgba(0,0,0,0.015)' }, '&:hover': { bgcolor: 'action.hover' } }}>
+                <TableRow key={row.id} sx={{ '&:nth-of-type(odd)': { bgcolor: 'action.selected' }, '&:hover': { bgcolor: 'action.hover' } }}>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <Avatar sx={{ width: 36, height: 36, borderRadius: '10px', bgcolor: 'primary.light', color: 'primary.main', fontSize: '0.8rem', fontWeight: 600 }}>

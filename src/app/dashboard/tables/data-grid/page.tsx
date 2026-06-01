@@ -68,7 +68,7 @@ export default function DataGridPage() {
         <TableContainer sx={{ overflowX: 'auto' }}>
           <Table size="small">
             <TableHead>
-              <TableRow sx={{ bgcolor: 'var(--bg-body)' }}>
+              <TableRow sx={{ bgcolor: 'action.hover' }}>
                 {(['name', 'email', 'role', 'status'] as SortKey[]).map(key => (
                   <TableCell key={key} sx={{ fontWeight: 600 }}>
                     <TableSortLabel active={sortKey === key} direction={sortDir} onClick={() => handleSort(key)}
