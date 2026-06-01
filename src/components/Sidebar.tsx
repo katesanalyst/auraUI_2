@@ -38,6 +38,9 @@ import {
   Close,
   PersonOutline,
   ConfirmationNumber,
+  ViewKanban,
+  Receipt,
+  Category,
 } from '@mui/icons-material';
 import { sidebarNav, NavItem } from '@/lib/navigation';
 
@@ -52,6 +55,9 @@ const iconMap: Record<string, React.ReactNode> = {
   Lock: <Lock fontSize="small" />,
   Build: <Build fontSize="small" />,
   ConfirmationNumber: <ConfirmationNumber fontSize="small" />,
+  ViewKanban: <ViewKanban fontSize="small" />,
+  Receipt: <Receipt fontSize="small" />,
+  Category: <Category fontSize="small" />,
   Circle: <Circle sx={{ fontSize: 8 }} />,
 };
 

@@ -31,11 +31,13 @@ export const sidebarNav: NavItem[] = [
     icon: 'Apps',
     href: '/dashboard/apps',
     children: [
-      { title: 'Contacts', icon: 'Contacts',      href: '/dashboard/apps/contacts' },
-      { title: 'Chat',     icon: 'Chat',           href: '/dashboard/apps/chat',  chip: '3', chipColor: 'secondary' },
-      { title: 'Notes',    icon: 'Notes',          href: '/dashboard/apps/notes' },
-      { title: 'Calendar', icon: 'CalendarMonth',  href: '/dashboard/apps/calendar' },
-      { title: 'Email',    icon: 'Email',          href: '/dashboard/apps/email', chip: '5', chipColor: 'primary' },
+      { title: 'Contacts', icon: 'Contacts',     href: '/dashboard/apps/contacts' },
+      { title: 'Chat',     icon: 'Chat',          href: '/dashboard/apps/chat',  chip: '3', chipColor: 'secondary' },
+      { title: 'Notes',    icon: 'Notes',         href: '/dashboard/apps/notes' },
+      { title: 'Calendar', icon: 'CalendarMonth', href: '/dashboard/apps/calendar' },
+      { title: 'Email',    icon: 'Email',         href: '/dashboard/apps/email', chip: '5', chipColor: 'primary' },
+      { title: 'Kanban',   icon: 'ViewKanban',    href: '/dashboard/apps/kanban' },
+      { title: 'Invoice',  icon: 'Receipt',       href: '/dashboard/apps/invoice/list' },
     ],
   },
   {
@@ -100,6 +102,11 @@ export const sidebarNav: NavItem[] = [
       { title: 'Forgot Password', icon: 'Circle', href: '/auth/forgot-password' },
       { title: 'Two Steps',       icon: 'Circle', href: '/auth/two-steps' },
     ],
+  },
+  {
+    title: 'UI Components',
+    icon: 'Category',
+    href: '/dashboard/ui-components',
   },
   {
     title: 'Utilities',
